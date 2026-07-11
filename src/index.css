@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ---- Semantic color tokens (RGB channels for alpha support) ---- */
+  :root {
+    --surface: 255 255 255; /* page background */
+    --surface-2: 244 247 251; /* alt / raised sections */
+    --card: 255 255 255; /* card background */
+    --line: 226 232 240; /* borders / dividers */
+    --heading: 15 34 63; /* headings */
+    --body: 31 41 55; /* body text */
+    --muted: 75 85 99; /* secondary text */
+
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    color-scheme: light;
+  }
+
+  .dark {
+    --surface: 12 20 37; /* steel navy (lifted for readability) */
+    --surface-2: 18 29 51; /* alt sections */
+    --card: 27 42 71; /* clearly elevated above surface */
+    --line: 48 68 107; /* visible borders / dividers */
+    --heading: 244 248 253;
+    --body: 205 216 234;
+    --muted: 156 175 206;
+
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    @apply bg-surface text-body antialiased;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  body {
+    font-family: theme("fontFamily.sans");
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: theme("fontFamily.display");
+    @apply tracking-tight text-heading;
+  }
+
+  /* Visible, consistent focus ring for keyboard users. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent-500 ring-offset-2;
+    --tw-ring-offset-color: rgb(var(--surface));
+  }
+
+  ::selection {
+    @apply bg-accent-500/25 text-heading;
+  }
+
+  /* Themeable custom scrollbar. */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--surface-2));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line));
+    border-radius: 9999px;
+    border: 3px solid rgb(var(--surface-2));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme("colors.brand.400");
+  }
+}
+
+@layer components {
+  .container-px {
+    @apply mx-auto w-full max-w-[1400px] px-5 sm:px-6 lg:px-10 xl:px-14 2xl:px-20;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-500 dark:bg-brand-400/15 dark:text-brand-300;
+  }
+
+  .link-underline {
+    @apply relative after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:w-0 after:bg-accent-500 after:transition-all after:duration-300 hover:after:w-full;
+  }
+
+  /* Reusable gradient text for premium headings. */
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-500 via-brand-400 to-accent-500 bg-clip-text text-transparent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Slow "Ken Burns" zoom + subtle pan for the hero background (pseudo-3D depth).
+     Uses translate3d to stay on the GPU for smooth, cross-browser playback. */
+  @keyframes heroKenBurns {
+    0% {
+      transform: scale(1.05) translate3d(0, 0, 0);
+    }
+    50% {
+      transform: scale(1.16) translate3d(-1.6%, -1.2%, 0);
+    }
+    100% {
+      transform: scale(1.05) translate3d(0, 0, 0);
+    }
+  }
+
+  .hero-kenburns {
+    animation: heroKenBurns 28s ease-in-out infinite;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  /* Inverts the black logo PNG to white for dark surfaces. */
+  .logo-invert {
+    filter: brightness(0) invert(1);
+  }
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
