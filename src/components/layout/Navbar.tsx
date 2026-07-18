@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, ExternalLink, Menu, X } from "lucide-react";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 import { navItems, hero, site } from "@/data/site";
 import type { NavItem } from "@/data/site";
 import { Logo } from "@/components/ui/Logo";
@@ -62,7 +62,7 @@ export function Navbar() {
           setMenuOpen(false);
         }
       }}
-      className={cn(
+      className={classNames(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled
           ? "border-b border-line bg-surface/85 shadow-soft backdrop-blur-md"
@@ -82,7 +82,6 @@ export function Navbar() {
           <Logo light={onDark} />
         </a>
 
-        {/* Desktop / tablet navigation — visible from lg (1024px) up */}
         <ul className="hidden items-center gap-0 lg:flex xl:gap-0.5">
           {navItems.map((item) => (
             <DesktopNavItem
@@ -106,7 +105,6 @@ export function Navbar() {
             </LinkButton>
           </div>
 
-          {/* Mobile toggle — phones / small tablets only */}
           <button
             ref={menuButtonRef}
             type="button"
@@ -114,7 +112,7 @@ export function Navbar() {
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className={cn(
+            className={classNames(
               "grid h-11 w-11 place-items-center rounded-full transition-colors lg:hidden",
               onDark ? "text-white hover:bg-white/10" : "text-heading hover:bg-brand-500/10"
             )}
@@ -128,7 +126,6 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -207,7 +204,7 @@ function DesktopNavItem({
 
   const isActive = !item.external && active === item.href.replace("#", "");
 
-  const linkClasses = cn(
+  const linkClasses = classNames(
     "relative flex items-center gap-1 rounded-full px-2.5 py-2 text-sm font-medium transition-colors duration-300 xl:px-3.5",
     onDark
       ? "text-white/85 hover:text-white"
@@ -284,7 +281,7 @@ function DesktopNavItem({
         {item.label}
         <ChevronDown
           size={15}
-          className={cn("transition-transform duration-300", open && "rotate-180")}
+          className={classNames("transition-transform duration-300", open && "rotate-180")}
         />
         {isActive && (
           <motion.span

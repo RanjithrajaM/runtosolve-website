@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { offerings } from "@/data/site";
 import type { Offering, OfferingTheme } from "@/data/site";
 import { navigateToSection } from "@/lib/scrollToSection";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 
 const offeringThemes: Record<
   OfferingTheme,
@@ -89,9 +89,9 @@ export function WhatWeOffer() {
             return (
               <Reveal as="li" key={offering.title} delay={i * 0.08} className="h-full">
                 <article className="h-full" aria-labelledby={`offering-${offering.theme}-title`}>
-                  <Card prominent className={cn("flex h-full flex-col p-6 sm:p-7", theme.cardGlow)}>
+                  <Card prominent className={classNames("flex h-full flex-col p-6 sm:p-7", theme.cardGlow)}>
                     <span
-                      className={cn(
+                      className={classNames(
                         "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-all duration-300",
                         theme.icon,
                         theme.iconHover
@@ -117,7 +117,7 @@ export function WhatWeOffer() {
 
                     <span
                       aria-hidden="true"
-                      className={cn(
+                      className={classNames(
                         "mt-5 block h-1 w-10 rounded-full bg-line transition-all duration-300 group-hover:w-full group-hover:bg-gradient-to-r",
                         theme.bar
                       )}
@@ -190,7 +190,7 @@ function OfferingDialog({
     >
       <div
         aria-hidden="true"
-        className={cn(
+        className={classNames(
           "mt-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br text-white shadow-glow",
           theme.dialogIcon
         )}
@@ -207,7 +207,7 @@ function OfferingDialog({
         {offering.examples.map((example) => (
           <li
             key={example}
-            className={cn(
+            className={classNames(
               "rounded-full border px-3 py-1.5 text-xs font-medium",
               theme.pill
             )}

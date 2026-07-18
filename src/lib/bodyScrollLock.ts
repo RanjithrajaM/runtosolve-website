@@ -1,7 +1,6 @@
 let lockCount = 0;
 let savedScrollY = 0;
 
-/** iOS-safe body scroll lock (overflow:hidden alone is unreliable on Safari). */
 export function lockBodyScroll() {
   if (typeof document === "undefined") return;
 

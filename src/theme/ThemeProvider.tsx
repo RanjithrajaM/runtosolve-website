@@ -52,7 +52,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       try {
         window.localStorage.setItem(STORAGE_KEY, theme);
       } catch {
-        // Storage can be unavailable in private or restricted browsing modes.
+        return;
       }
     }
   }, [theme]);
@@ -70,7 +70,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       return () => media.removeEventListener("change", onChange);
     }
 
-    // Safari 13 and older expose the legacy MediaQueryList API.
     media.addListener(onChange);
     return () => media.removeListener(onChange);
   }, []);
@@ -95,8 +94,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
-// Hook co-located with provider — intentional for this small theme module.
-// eslint-disable-next-line react-refresh/only-export-components
 export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error("useTheme must be used within a ThemeProvider");

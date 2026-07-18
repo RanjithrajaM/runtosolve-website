@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/theme/ThemeProvider";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 
 type ThemeToggleProps = {
   onDark?: boolean;
@@ -20,7 +20,7 @@ export function ThemeToggle({ onDark = false, className }: ThemeToggleProps) {
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       aria-pressed={isDark}
       title={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      className={cn(
+      className={classNames(
         "relative grid h-11 w-11 place-items-center overflow-hidden rounded-full transition-colors duration-300",
         onDark
           ? "text-white hover:bg-white/15"

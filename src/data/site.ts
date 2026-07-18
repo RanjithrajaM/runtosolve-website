@@ -229,7 +229,6 @@ export const leadership = {
   role: "President & CEO",
   org: "RunToSolve, LLC",
   location: "Baltimore, Maryland, United States",
-  /** Filename (without extension) in src/assets/team/ — falls back to initials. */
   imageKey: "cris-moen",
   bio: [
     "Structural engineer and software builder specializing in cold-formed steel, thin-walled structures, and computational design.",

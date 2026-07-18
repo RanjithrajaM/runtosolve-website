@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 import { heroImages } from "@/data/heroMedia";
 import type { HeroImageSet } from "@/data/heroMedia";
 
@@ -33,7 +33,7 @@ function HeroPicture({
         fetchPriority={priority ? "high" : "low"}
         sizes={SIZES}
         draggable={false}
-        className={cn(
+        className={classNames(
           "h-full w-full object-cover object-center will-change-transform",
           animate && "hero-kenburns"
         )}
@@ -42,10 +42,6 @@ function HeroPicture({
   );
 }
 
-/**
- * Full-bleed hero carousel — AVIF/WebP responsive sources.
- * Mounts only the active + next slide (GPU opacity crossfade).
- */
 export function HeroBackground() {
   const reduce = useReducedMotion();
   const images = heroImages;
@@ -61,7 +57,6 @@ export function HeroBackground() {
     return () => window.clearInterval(id);
   }, [reduce, hasMultiple, images.length]);
 
-  // Preload first hero AVIF so LCP paints quickly.
   useEffect(() => {
     const href = images[0]?.preloadAvif;
     if (!href) return;
@@ -77,7 +72,6 @@ export function HeroBackground() {
     };
   }, [images]);
 
-  // Warm the browser cache for the slide after next (sequential prefetch).
   useEffect(() => {
     if (reduce || images.length < 3) return;
     const warm = images[(index + 2) % images.length];
@@ -116,7 +110,7 @@ export function HeroBackground() {
             <div
               key={image.id}
               aria-hidden="true"
-              className={cn(
+              className={classNames(
                 "absolute inset-0 transition-opacity duration-[1500ms] ease-in-out",
                 isActive ? "opacity-100" : "opacity-0"
               )}

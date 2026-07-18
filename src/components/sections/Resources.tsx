@@ -9,7 +9,6 @@ import { resources, site } from "@/data/site";
 export function Resources() {
   const [playing, setPlaying] = useState(false);
 
-  // Click-to-play only — avoids background googlevideo.com traffic from autoplay.
   const embedSrc =
     `https://www.youtube-nocookie.com/embed/${site.youtubeId}` +
     `?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
@@ -25,7 +24,6 @@ export function Resources() {
     >
       <Reveal delay={0.1} className="mx-auto max-w-4xl">
         <div className="relative">
-          {/* Soft glow anchors the video and gives the section depth. */}
           <span
             aria-hidden="true"
             className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-br from-brand-500/15 via-transparent to-accent-500/20 blur-2xl"

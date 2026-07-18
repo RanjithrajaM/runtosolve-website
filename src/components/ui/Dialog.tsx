@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 import { lockBodyScroll, unlockBodyScroll } from "@/lib/bodyScrollLock";
 
 const FOCUSABLE_SELECTOR = [
@@ -132,7 +132,7 @@ export function Dialog({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ type: "spring", stiffness: 380, damping: 30 }}
-            className={cn(
+            className={classNames(
               "relative z-10 w-full max-w-lg overflow-hidden rounded-3xl border border-line bg-card shadow-card",
               className
             )}
@@ -140,14 +140,14 @@ export function Dialog({
           >
             <div
               aria-hidden="true"
-              className={cn(
+              className={classNames(
                 "absolute inset-x-0 top-0 h-1 bg-gradient-to-r",
                 accentBarClassName
               )}
             />
             <div
               aria-hidden="true"
-              className={cn(
+              className={classNames(
                 "pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full blur-3xl",
                 glowClassName
               )}

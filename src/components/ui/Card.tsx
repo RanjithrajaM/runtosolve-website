@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 
 type CardProps = {
   className?: string;
@@ -25,7 +25,7 @@ export function Card({
           : undefined
       }
       transition={{ type: "spring", stiffness: 320, damping: 22 }}
-      className={cn(
+      className={classNames(
         "group relative h-full overflow-hidden rounded-3xl border border-line bg-card p-7 shadow-soft",
         interactive &&
           "transition-[border-color,box-shadow] duration-300 hover:border-brand-400/50 hover:shadow-card dark:hover:border-brand-400/40",

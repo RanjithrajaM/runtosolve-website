@@ -3,25 +3,16 @@ export type HeroWidth = (typeof HERO_WIDTHS)[number];
 
 export type HeroImageSet = {
   id: string;
-  /** AVIF srcset: "url 768w, url 1280w, …" */
   avifSrcSet: string;
-  /** WebP fallback srcset for older browsers */
   webpSrcSet: string;
-  /** Smallest WebP — universal <img src> fallback */
   fallbackSrc: string;
-  /** Best desktop AVIF for <link rel="preload"> on the first slide */
   preloadAvif: string;
 };
 
-/**
- * Prefer darker / high-contrast construction shots first.
- * Bright / washed-out / off-brand images are excluded from the carousel
- * so hero type stays readable.
- */
 const HERO_PRIORITY = [
-  "IMG_2510", // light-steel framing building
-  "IMG_1107", // construction + sky
-  "IMG_20180802_171318", // steel lattice
+  "IMG_2510",
+  "IMG_1107",
+  "IMG_20180802_171318",
   "IMG_0881",
   "IMG_4030",
   "IMG_4213",
@@ -45,13 +36,12 @@ const HERO_PRIORITY = [
   "PXL_20231129_202351252",
 ] as const;
 
-/** Drop from hero entirely (too bright, lab clutter, or off-brand). */
 const HERO_EXCLUDE = new Set([
-  "IMG_1145", // bright white canopy — washes text
-  "IMG_1531", // ruins — off-brand
-  "IMG_2439", // bright solar farm
+  "IMG_1145",
+  "IMG_1531",
+  "IMG_2439",
   "IMG_0351",
-  "IMG_0356", // bright rebar close-ups
+  "IMG_0356",
   "IMG_0313",
   "IMG_0005",
   "IMG_0466",
@@ -65,7 +55,7 @@ const HERO_EXCLUDE = new Set([
   "DSCF0034",
   "DSCF0049",
   "DSCF0124",
-  "IMG_20200805_160458", // bright lab interior
+  "IMG_20200805_160458",
   "IMG-20240301-WA0007",
   "IMG-20240315-WA0001",
 ]);
@@ -122,7 +112,7 @@ for (const [filePath, url] of Object.entries(modules)) {
   bucket[parsed.format][parsed.width] = url;
 }
 
-/** Responsive company photos for the hero (AVIF + WebP, curated order). */
+
 export const heroImages: HeroImageSet[] = sortHeroIds([...buckets.keys()])
   .map((id) => {
     const { avif, webp } = buckets.get(id)!;

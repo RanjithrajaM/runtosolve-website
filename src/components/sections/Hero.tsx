@@ -41,7 +41,6 @@ export function Hero() {
       aria-label="Introduction"
     >
       <HeroBackground />
-      {/* Balanced scrim — readable on light photos, image still visible */}
       <div className="absolute inset-0 z-0 bg-gradient-to-r from-brand-950/88 via-brand-950/58 to-brand-950/22 dark:from-brand-950/92 dark:via-brand-950/65 dark:to-brand-950/30" />
       <div className="absolute inset-0 z-0 bg-gradient-to-t from-brand-950/82 via-brand-950/15 to-brand-950/40" />
       <div className="absolute inset-y-0 left-0 z-0 w-full max-w-5xl bg-gradient-to-r from-brand-950/35 to-transparent" />

@@ -12,7 +12,6 @@ import { Contact } from "@/components/sections/Contact";
 import { scrollToSection } from "@/lib/scrollToSection";
 
 export default function App() {
-  // Deep links (#about, etc.) land below the fixed header without clipping.
   useEffect(() => {
     const hash = window.location.hash;
     if (!hash || hash === "#top") return;

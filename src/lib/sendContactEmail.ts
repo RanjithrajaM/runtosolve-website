@@ -4,22 +4,11 @@ type ContactFields = {
   message: string;
 };
 
-/** User-facing fallback shown when the form cannot send. */
 export const CONTACT_INBOX = "contact@runtosolve.com";
 
 const DEFAULT_SUBJECT = (name: string) =>
   `RunToSolve website inquiry from ${name}`;
 
-/**
- * Static Forms form keys are public identifiers (same as their HTML embed).
- *
- * Important: POST as `application/x-www-form-urlencoded` (no custom JSON
- * Content-Type) so the browser skips a CORS preflight — JSON fetch often
- * surfaces as "Failed to fetch" even when the API is fine.
- *
- * Protect abuse via Static Forms → Security → Domain restriction (+ CAPTCHA).
- * Docs: https://www.staticforms.dev/docs/troubleshooting
- */
 export async function sendContactEmail(fields: ContactFields): Promise<void> {
   const apiKey = import.meta.env.VITE_STATICFORMS_API_KEY?.trim();
 
@@ -51,7 +40,6 @@ export async function sendContactEmail(fields: ContactFields): Promise<void> {
   try {
     response = await fetch("https://api.staticforms.dev/submit", {
       method: "POST",
-      // URLSearchParams → form-urlencoded “simple request” (avoids CORS preflight).
       body,
       signal: controller.signal,
     });
@@ -76,7 +64,6 @@ export async function sendContactEmail(fields: ContactFields): Promise<void> {
   try {
     data = (await response.json()) as typeof data;
   } catch {
-    /* non-JSON success pages still count if HTTP 200 */
     if (response.ok) return;
   }
 

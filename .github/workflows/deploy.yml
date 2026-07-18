@@ -39,9 +39,6 @@ jobs:
 
       - name: Build Project
         env:
-          # Vite inlines this at build time — add the same form key in
-          # GitHub → Settings → Secrets and variables → Actions
-          # as VITE_STATICFORMS_API_KEY
           VITE_STATICFORMS_API_KEY: ${{ secrets.VITE_STATICFORMS_API_KEY }}
         run: npm run build
 

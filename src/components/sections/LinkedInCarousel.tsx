@@ -13,7 +13,7 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { ScrollFade } from "@/components/ui/ScrollFade";
 import { LinkButton } from "@/components/ui/Button";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 import { linkedInPosts, site } from "@/data/site";
 import type { LinkedInPost } from "@/data/site";
 
@@ -193,7 +193,7 @@ export function LinkedInCarousel() {
             className="grid h-8 w-8 place-items-center rounded-full"
           >
             <span
-              className={cn(
+              className={classNames(
                 "h-2.5 rounded-full transition-all duration-300",
                 i === active
                   ? "w-6 bg-accent-500"
@@ -241,12 +241,11 @@ function PostCard({ post, active }: { post: LinkedInPost; active: boolean }) {
       rel="noreferrer"
       tabIndex={active ? 0 : -1}
       aria-label={`${post.title} — read on LinkedIn (opens in a new tab)`}
-      className={cn(
+      className={classNames(
         "group flex h-[300px] flex-col rounded-3xl border border-line bg-card p-5 shadow-card transition-shadow sm:p-6",
         active && "hover:shadow-glow"
       )}
     >
-      {/* Author row — mirrors a LinkedIn post header. */}
       <div className="flex items-center gap-3">
         <span className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full bg-white ring-1 ring-line">
           <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width={32} height={32} className="h-8 w-8" />

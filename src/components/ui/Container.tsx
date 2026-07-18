@@ -1,5 +1,5 @@
 import type { ElementType, ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 
 type ContainerProps = {
   as?: ElementType;
@@ -8,5 +8,5 @@ type ContainerProps = {
 };
 
 export function Container({ as: Tag = "div", className, children }: ContainerProps) {
-  return <Tag className={cn("container-px", className)}>{children}</Tag>;
+  return <Tag className={classNames("container-px", className)}>{children}</Tag>;
 }

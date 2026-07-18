@@ -7,7 +7,6 @@ function prefersReducedMotion() {
   );
 }
 
-/** Fixed header height — measured from the live header element. */
 function headerOffsetPx(): number {
   const bar = document.querySelector("header") as HTMLElement | null;
   return Math.round(bar?.getBoundingClientRect().height ?? 84);
@@ -26,7 +25,6 @@ export function scrollToSection(hash: string, instant = false) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  // Align the section's top boundary just below the fixed header.
   const top = Math.max(
     0,
     Math.round(
@@ -36,7 +34,6 @@ export function scrollToSection(hash: string, instant = false) {
   window.scrollTo({ top, behavior });
 }
 
-/** After overlays close, measure once layout has settled. */
 function scrollAfterLayout(hash: string) {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => scrollToSection(hash));

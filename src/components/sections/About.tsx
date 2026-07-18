@@ -5,7 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { LinkButton } from "@/components/ui/Button";
 import { about, leadership } from "@/data/site";
 import { teamImages } from "@/data/teamImages";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 
 function initials(name: string) {
   return name
@@ -129,7 +129,7 @@ export function About() {
                   width={112}
                   height={112}
                   loading="lazy"
-                  className={cn(
+                  className={classNames(
                     "h-24 w-24 rounded-2xl object-cover ring-2 ring-white/20 transition-all duration-300 sm:h-28 sm:w-28",
                     "group-hover:ring-accent-400/60 group-hover:shadow-glow"
                   )}

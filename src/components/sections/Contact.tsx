@@ -5,7 +5,7 @@ import { CheckCircle2, Loader2, Mail, Send } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/cn";
+import { classNames } from "@/lib/classNames";
 import { site } from "@/data/site";
 import { CONTACT_INBOX, sendContactEmail } from "@/lib/sendContactEmail";
 
@@ -242,8 +242,7 @@ function Field({
   disabled,
 }: FieldProps) {
   const describedBy = error ? `${id}-error` : undefined;
-  const controlClasses = cn(
-    // text-base (≥16px) prevents iOS Safari from auto-zooming on focus.
+  const controlClasses = classNames(
     "mt-1.5 w-full rounded-xl border bg-surface px-4 py-3 text-base text-body transition-colors duration-200 placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent-500/60 disabled:cursor-not-allowed disabled:opacity-60",
     error ? "border-red-400" : "border-line focus:border-accent-400"
   );
@@ -270,7 +269,7 @@ function Field({
           aria-describedby={describedBy}
           aria-required={required}
           onChange={(e) => onChange(e.target.value)}
-          className={cn(controlClasses, "resize-y")}
+          className={classNames(controlClasses, "resize-y")}
         />
       ) : (
         <input
