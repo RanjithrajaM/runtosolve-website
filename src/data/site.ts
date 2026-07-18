@@ -13,7 +13,7 @@ import {
   Boxes,
 } from "lucide-react";
 
-export type NavChild = {
+type NavChild = {
   label: string;
   description?: string;
   href: string;
@@ -23,9 +23,7 @@ export type NavChild = {
 export type NavItem = {
   label: string;
   href: string;
-  /** External links open in a new tab. */
   external?: boolean;
-  /** Dropdown children (renders a menu on hover/focus). */
   children?: NavChild[];
 };
 
@@ -37,15 +35,12 @@ export type Offering = {
   theme: OfferingTheme;
   tagline: string;
   description: string;
-  /** Extended copy shown in the detail dialog. */
   details: string;
-  /** Bullet highlights for the detail dialog. */
   highlights: string[];
-  /** Real examples / deliverables shown in the dialog. */
   examples: string[];
 };
 
-export type NewsItem = {
+type NewsItem = {
   tag: string;
   category: string;
   title: string;
@@ -63,7 +58,7 @@ export type LinkedInPost = {
   href: string;
 };
 
-export type SocialLink = {
+type SocialLink = {
   label: string;
   href: string;
   icon: LucideIcon;
@@ -78,7 +73,6 @@ export const site = {
   linkedin: "https://www.linkedin.com/company/runtosolve/posts/?feedView=all",
   github: "https://github.com/runtosolve",
   apps: "https://apps.runtosolve.com/login",
-  capabilities: "https://www.runtosolve.com/RunToSolve_Capabilities.pdf",
   youtube: "https://www.youtube.com/watch?v=mV3uEi1iIXo",
   youtubeId: "mV3uEi1iIXo",
 };
@@ -117,23 +111,22 @@ export const navItems: NavItem[] = [
   { label: "About", href: "#about" },
   { label: "Resources", href: "#resources" },
   { label: "Apps", href: site.apps, external: true },
-  { label: "Capabilities", href: site.capabilities, external: true },
   { label: "GitHub", href: site.github, external: true },
   { label: "Contact", href: "#contact" },
 ];
 
 export const hero = {
-  eyebrow: "Steel Construction Industry",
+  tags: [
+    "Metal Buildings",
+    "Light Steel Framing",
+    "Storage Rack Systems",
+    "Composite Decks",
+    "Cold-formed Steel",
+  ],
   title: "We equip you with the engineering insight to perform and grow.",
   subtitle:
-    "RunToSolve is an engineering technology company advancing the steel construction industry with software, simulation, design, and research.",
+    "RunToSolve is an engineering technology company advancing industries with software, simulation, design and research.",
   primaryCta: { label: "Get Started", href: "#contact" },
-  secondaryCta: { label: "Explore Capabilities", href: site.capabilities },
-  stats: [
-    { value: "2019", label: "Founded" },
-    { value: "CFS", label: "Specialization" },
-    { value: "Open", label: "Source R&D" },
-  ],
 };
 
 export const offerings: Offering[] = [
@@ -265,17 +258,12 @@ export const news: NewsItem[] = [
 ];
 
 export const resources = {
-  title: "Resources",
   description:
     "Watch our latest video to learn how we bring simulation, software, and design research to the steel construction industry.",
   videoTitle: "Metal building purlin line strength by computation",
   cta: { label: "View Resources", href: site.github },
 };
 
-// Recent posts summarized from the RunToSolve LinkedIn feed. Each `href` points
-// to the most specific destination available for that update (the referenced
-// GitHub repo / conference), so cards deep-link instead of always opening the
-// company page. To add a new post, drop another entry at the top of this array.
 export const linkedInPosts: LinkedInPost[] = [
   {
     category: "Event",

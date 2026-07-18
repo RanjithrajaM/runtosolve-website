@@ -13,9 +13,23 @@
     --body: 31 41 55; /* body text */
     --muted: 75 85 99; /* secondary text */
 
+    /* Fixed nav height — used by scroll-mt / scroll-padding for flush landings */
+    --header-offset: 4.75rem;
     scroll-behavior: smooth;
-    scroll-padding-top: 5.5rem;
+    scroll-padding-top: var(--header-offset);
     color-scheme: light;
+  }
+
+  @media (min-width: 640px) {
+    :root {
+      --header-offset: 5.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --header-offset: 6rem;
+    }
   }
 
   .dark {
@@ -40,6 +54,8 @@
     font-family: theme("fontFamily.sans");
     text-rendering: optimizeLegibility;
     min-height: 100vh;
+    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   h1,
@@ -91,10 +107,6 @@
     @apply relative after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:w-0 after:bg-accent-500 after:transition-all after:duration-300 hover:after:w-full;
   }
 
-  /* Reusable gradient text for premium headings. */
-  .text-gradient {
-    @apply bg-gradient-to-r from-brand-500 via-brand-400 to-accent-500 bg-clip-text text-transparent;
-  }
 }
 
 @layer utilities {

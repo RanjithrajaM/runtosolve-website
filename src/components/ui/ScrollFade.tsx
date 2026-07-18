@@ -7,11 +7,6 @@ type ScrollFadeProps = {
   className?: string;
 };
 
-/**
- * Scroll-linked fade: content eases in as it enters the viewport and gently
- * fades + lifts away once ~80% of it has scrolled out — giving smooth section
- * transitions instead of hard, static cut-offs. Honors reduced-motion.
- */
 export function ScrollFade({ children, className }: ScrollFadeProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();

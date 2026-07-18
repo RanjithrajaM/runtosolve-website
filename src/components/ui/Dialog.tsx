@@ -3,6 +3,16 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { lockBodyScroll, unlockBodyScroll } from "@/lib/bodyScrollLock";
+
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(",");
 
 type DialogProps = {
   open: boolean;
@@ -17,7 +27,6 @@ type DialogProps = {
   id?: string;
 };
 
-/** Accessible modal — closes on backdrop click, Escape, or the top-right button. */
 export function Dialog({
   open,
   onClose,
@@ -33,22 +42,65 @@ export function Dialog({
   const titleId = useId();
   const descriptionId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!open) return;
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
+    previousFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    lockBodyScroll();
+    const focusFrame = window.requestAnimationFrame(() => {
+      closeRef.current?.focus();
+    });
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      ).filter((element) => element.getClientRects().length > 0);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (!first || !last) {
+        event.preventDefault();
+        dialog.focus();
+      } else if (
+        event.shiftKey &&
+        (document.activeElement === first ||
+          !dialog.contains(document.activeElement))
+      ) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        (document.activeElement === last ||
+          !dialog.contains(document.activeElement))
+      ) {
+        event.preventDefault();
+        first.focus();
+      }
     };
 
-    window.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
+      window.cancelAnimationFrame(focusFrame);
+      unlockBodyScroll();
+      document.removeEventListener("keydown", onKeyDown);
+      previousFocusRef.current?.focus();
     };
   }, [open, onClose]);
 
@@ -58,9 +110,8 @@ export function Dialog({
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-          <motion.button
-            type="button"
-            aria-label="Close dialog"
+          <motion.div
+            aria-hidden="true"
             className="absolute inset-0 bg-brand-950/55 backdrop-blur-sm dark:bg-black/65"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -70,11 +121,13 @@ export function Dialog({
           />
 
           <motion.div
+            ref={dialogRef}
             id={id}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={description ? descriptionId : undefined}
+            tabIndex={-1}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -107,10 +160,10 @@ export function Dialog({
               className="absolute right-4 top-4 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-muted transition-colors hover:border-accent-500/40 hover:bg-accent-500/10 hover:text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
               aria-label="Close"
             >
-              <X size={18} />
+              <X size={18} aria-hidden="true" />
             </button>
 
-            <div className="relative max-h-[min(80vh,720px)] overflow-y-auto p-7 pt-8 sm:p-8">
+            <div className="relative max-h-[min(80vh,720px)] max-h-[min(80dvh,720px)] overflow-y-auto overscroll-contain p-7 pt-8 sm:p-8">
               <h2 id={titleId} className="pr-10 font-display text-2xl font-bold text-heading">
                 {title}
               </h2>

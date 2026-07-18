@@ -4,26 +4,21 @@ import logoUrl from "@/assets/runtosolve-logo.png";
 
 type LogoProps = {
   className?: string;
-  /** Force the white (inverted) logo — e.g. over the dark hero. */
   light?: boolean;
-  /** Show the "Get the answer." tagline beneath the wordmark. */
   withTagline?: boolean;
 };
 
-/**
- * Brand logo lockup. Uses the official PNG and inverts it to white on dark
- * surfaces (either forced via `light` or automatically in dark theme).
- */
+/** Brand mark — company size: 16.5rem × 3.75rem on desktop. */
 export function Logo({ className, light = false, withTagline = false }: LogoProps) {
   return (
     <span className={cn("inline-flex flex-col", className)}>
       <img
         src={logoUrl}
         alt={`${site.legalName} logo`}
-        width={168}
-        height={40}
+        width={264}
+        height={60}
         className={cn(
-          "h-10 w-auto select-none sm:h-12",
+          "h-[2.75rem] w-auto max-w-[12rem] select-none object-contain object-left sm:h-[3.25rem] sm:max-w-[14.5rem] lg:h-[3rem] lg:max-w-[13rem] xl:h-[3.75rem] xl:w-[16.5rem] xl:max-w-none",
           light ? "logo-invert" : "dark:logo-invert"
         )}
       />

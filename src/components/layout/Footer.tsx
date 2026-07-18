@@ -29,6 +29,11 @@ export function Footer() {
                     href={item.href}
                     target={item.external ? "_blank" : undefined}
                     rel={item.external ? "noreferrer" : undefined}
+                    aria-label={
+                      item.external
+                        ? `${item.label} (opens in a new tab)`
+                        : undefined
+                    }
                     onClick={(e) => handleAnchorClick(e, item.href)}
                     className="text-brand-200 transition-colors hover:text-white link-underline"
                   >
@@ -54,12 +59,16 @@ export function Footer() {
                 <a
                   key={label}
                   href={href}
-                  aria-label={label}
+                  aria-label={
+                    href.startsWith("http")
+                      ? `${label} (opens in a new tab)`
+                      : label
+                  }
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noreferrer" : undefined}
-                  className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white transition-all duration-300 hover:-translate-y-1 hover:bg-accent-500"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white transition-all duration-300 hover:-translate-y-1 hover:bg-accent-500"
                 >
-                  <Icon size={18} />
+                  <Icon size={18} aria-hidden="true" />
                 </a>
               ))}
             </div>

@@ -7,14 +7,16 @@ function prefersReducedMotion() {
   );
 }
 
-/**
- * Smoothly scrolls to an in-page section, compensating for the fixed header so
- * the target's heading always lands cleanly below the navbar (never cut off).
- * Falls back to the very top for `#top`/empty hashes.
- */
-export function scrollToSection(hash: string) {
+/** Fixed header height — measured from the live header element. */
+function headerOffsetPx(): number {
+  const bar = document.querySelector("header") as HTMLElement | null;
+  return Math.round(bar?.getBoundingClientRect().height ?? 84);
+}
+
+export function scrollToSection(hash: string, instant = false) {
   const id = hash.replace(/^#/, "");
-  const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
+  const behavior: ScrollBehavior =
+    instant || prefersReducedMotion() ? "auto" : "smooth";
 
   if (!id || id === "top") {
     window.scrollTo({ top: 0, behavior });
@@ -24,22 +26,23 @@ export function scrollToSection(hash: string) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  // Measure only the top nav bar (not the whole <header>, which may still
-  // contain the collapsing mobile menu) so the offset stays stable.
-  const bar =
-    document.querySelector("header nav") ?? document.querySelector("header");
-  const offset = (bar?.getBoundingClientRect().height ?? 72) + 12;
-  const top = el.getBoundingClientRect().top + window.scrollY - offset;
-
-  window.scrollTo({ top: Math.max(top, 0), behavior });
+  // Align the section's top boundary just below the fixed header.
+  const top = Math.max(
+    0,
+    Math.round(
+      el.getBoundingClientRect().top + window.scrollY - headerOffsetPx()
+    )
+  );
+  window.scrollTo({ top, behavior });
 }
 
-/**
- * Click handler for in-page anchor links. For hash targets it prevents the
- * native jump, releases any scroll lock (mobile menu), runs an optional
- * callback (e.g. close the menu), then performs an offset-aware smooth scroll.
- * External links keep their default behavior.
- */
+/** After overlays close, measure once layout has settled. */
+function scrollAfterLayout(hash: string) {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => scrollToSection(hash));
+  });
+}
+
 export function handleAnchorClick(
   e: MouseEvent<HTMLAnchorElement>,
   href: string,
@@ -48,19 +51,13 @@ export function handleAnchorClick(
   if (!href.startsWith("#")) return;
   e.preventDefault();
   onNavigate?.();
-  // Release the body scroll lock the mobile menu may have applied so the
-  // programmatic scroll can actually move the page.
-  document.body.style.overflow = "";
   window.history.replaceState(null, "", href);
-  // Wait a frame so layout settles (menu collapse / overflow reset) first.
-  requestAnimationFrame(() => scrollToSection(href));
+  scrollAfterLayout(href);
 }
 
-/** Programmatic in-page navigation — same offset-aware scroll as header links. */
 export function navigateToSection(hash: string, onBeforeScroll?: () => void) {
   if (!hash.startsWith("#")) return;
   onBeforeScroll?.();
-  document.body.style.overflow = "";
   window.history.replaceState(null, "", hash);
-  requestAnimationFrame(() => scrollToSection(hash));
+  scrollAfterLayout(hash);
 }

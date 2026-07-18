@@ -5,7 +5,6 @@ import type { Variants } from "framer-motion";
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  /** Stagger delay in seconds for sequential reveals. */
   delay?: number;
   as?: "div" | "section" | "li" | "article" | "span";
 };
@@ -19,10 +18,6 @@ const variants: Variants = {
   }),
 };
 
-/**
- * Scroll-triggered fade/slide-in wrapper. Animates once when it enters the
- * viewport; honors reduced-motion via the global CSS override.
- */
 export function Reveal({ children, className, delay = 0, as = "div" }: RevealProps) {
   const MotionTag = motion[as];
   return (

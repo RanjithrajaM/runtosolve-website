@@ -33,7 +33,6 @@ export function About() {
       className="bg-surface-2"
     >
       <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:items-stretch">
-        {/* What we do + capabilities */}
         <Reveal className="h-full">
           <motion.div
             {...cardHover}
@@ -104,7 +103,6 @@ export function About() {
           </motion.div>
         </Reveal>
 
-        {/* Leadership card */}
         <Reveal delay={0.1} className="h-full">
           <motion.figure
             {...cardHover}
@@ -179,9 +177,10 @@ export function About() {
                 target="_blank"
                 rel="noreferrer"
                 variant="glass"
+                aria-label="Connect on LinkedIn (opens in a new tab)"
                 className="transition-all duration-300 group-hover:bg-white/25 group-hover:shadow-glow"
               >
-                <Linkedin size={18} />
+                <Linkedin size={18} aria-hidden="true" />
                 Connect on LinkedIn
               </LinkButton>
             </div>

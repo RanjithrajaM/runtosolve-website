@@ -11,13 +11,11 @@ type SectionProps = {
   description?: string;
   className?: string;
   centered?: boolean;
+  /** Use when the section heading is rendered by the caller. */
+  ariaLabelledby?: string;
   children: ReactNode;
 };
 
-/**
- * Standard page section with an optional heading block. Every section shares
- * consistent vertical rhythm, an accessible landmark, and a reveal animation.
- */
 export function Section({
   id,
   eyebrow,
@@ -25,14 +23,19 @@ export function Section({
   description,
   className,
   centered = true,
+  ariaLabelledby,
   children,
 }: SectionProps) {
-  const labelledBy = title && id ? `${id}-title` : undefined;
+  const labelledBy =
+    ariaLabelledby ?? (title && id ? `${id}-title` : undefined);
   return (
     <section
       id={id}
       aria-labelledby={labelledBy}
-      className={cn("scroll-mt-24 py-20 sm:py-24 lg:py-28", className)}
+      className={cn(
+        "scroll-mt-[var(--header-offset)] py-20 sm:py-24 lg:py-28",
+        className
+      )}
     >
       <ScrollFade>
         <Container>

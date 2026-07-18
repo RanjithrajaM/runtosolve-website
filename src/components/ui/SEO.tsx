@@ -13,7 +13,6 @@ const DEFAULTS = {
   url: "https://www.runtosolve.com",
 };
 
-/** Per-page SEO/meta management on top of the static tags in index.html. */
 export function SEO({ title, description, path = "/" }: SEOProps) {
   const fullTitle = title ? `${title} — RunToSolve` : DEFAULTS.title;
   const desc = description ?? DEFAULTS.description;

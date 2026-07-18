@@ -4,7 +4,6 @@ import { useTheme } from "@/theme/ThemeProvider";
 import { cn } from "@/lib/cn";
 
 type ThemeToggleProps = {
-  /** Light styling for use over the dark hero / transparent navbar. */
   onDark?: boolean;
   className?: string;
 };
@@ -19,9 +18,10 @@ export function ThemeToggle({ onDark = false, className }: ThemeToggleProps) {
       onClick={toggleTheme}
       whileTap={{ scale: 0.9 }}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      aria-pressed={isDark}
       title={isDark ? "Switch to light theme" : "Switch to dark theme"}
       className={cn(
-        "relative grid h-10 w-10 place-items-center overflow-hidden rounded-full transition-colors duration-300",
+        "relative grid h-11 w-11 place-items-center overflow-hidden rounded-full transition-colors duration-300",
         onDark
           ? "text-white hover:bg-white/15"
           : "text-heading hover:bg-brand-500/10 dark:hover:bg-white/10",
@@ -37,7 +37,7 @@ export function ThemeToggle({ onDark = false, className }: ThemeToggleProps) {
             exit={{ y: -16, opacity: 0, rotate: 30 }}
             transition={{ duration: 0.25 }}
           >
-            <Moon size={20} />
+            <Moon size={20} aria-hidden="true" />
           </motion.span>
         ) : (
           <motion.span
@@ -47,7 +47,7 @@ export function ThemeToggle({ onDark = false, className }: ThemeToggleProps) {
             exit={{ y: -16, opacity: 0, rotate: -30 }}
             transition={{ duration: 0.25 }}
           >
-            <Sun size={20} />
+            <Sun size={20} aria-hidden="true" />
           </motion.span>
         )}
       </AnimatePresence>

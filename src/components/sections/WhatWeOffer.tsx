@@ -195,7 +195,7 @@ function OfferingDialog({
           theme.dialogIcon
         )}
       >
-        <Icon size={28} focusable="false" />
+        <Icon size={28} aria-hidden="true" focusable="false" />
       </div>
 
       <p className="mt-5 text-base leading-relaxed text-body">{offering.details}</p>

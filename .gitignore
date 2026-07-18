@@ -32,3 +32,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Raw company media — web copies live in src/assets/hero/
+RunToSolve website pictures/
+iloveimg-converted/
+RunToSolveLogo.png

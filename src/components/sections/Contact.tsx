@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, Mail, Send } from "lucide-react";
+import { CheckCircle2, Loader2, Mail, Send } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { site } from "@/data/site";
+import { CONTACT_INBOX, sendContactEmail } from "@/lib/sendContactEmail";
 
 type Fields = { name: string; email: string; message: string };
 type Errors = Partial<Record<keyof Fields, string>>;
@@ -24,28 +25,53 @@ function validate(fields: Fields): Errors {
 }
 
 export function Contact() {
+  const formId = useId();
   const [fields, setFields] = useState<Fields>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const update = (key: keyof Fields) => (value: string) => {
     setFields((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: undefined }));
+    setFormError(null);
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setFormError(null);
+
     const nextErrors = validate(fields);
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+    if (Object.keys(nextErrors).length > 0) {
+      window.requestAnimationFrame(() => {
+        formRef.current
+          ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+          ?.focus();
+      });
+      return;
+    }
 
-    // No backend yet: compose an email the user can send from their client.
-    const subject = encodeURIComponent(`Website inquiry from ${fields.name}`);
-    const body = encodeURIComponent(`${fields.message}\n\n— ${fields.name} (${fields.email})`);
-    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
-
-    setSent(true);
-    setFields(EMPTY);
+    setSubmitting(true);
+    try {
+      await sendContactEmail({
+        name: fields.name.trim(),
+        email: fields.email.trim(),
+        message: fields.message.trim(),
+      });
+      setSent(true);
+      setFields(EMPTY);
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please email us directly."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -66,7 +92,7 @@ export function Contact() {
               href={`mailto:${site.email}`}
               className="mt-4 inline-flex items-center gap-2 font-medium text-brand-600 link-underline dark:text-brand-300"
             >
-              <Mail size={18} />
+              <Mail size={18} aria-hidden="true" />
               {site.email}
             </a>
           </div>
@@ -81,13 +107,14 @@ export function Contact() {
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col items-center justify-center rounded-3xl border border-line bg-card p-10 text-center shadow-soft"
                 role="status"
+                aria-live="polite"
               >
-                <CheckCircle2 size={48} className="text-accent-500" />
+                <CheckCircle2 size={48} className="text-accent-500" aria-hidden="true" />
                 <h3 className="mt-4 text-xl font-semibold text-heading">
                   Thank you!
                 </h3>
                 <p className="mt-2 text-muted">
-                  Your email client should have opened. We'll be in touch shortly.
+                  Your message was sent. We'll get back to you shortly.
                 </p>
                 <Button
                   variant="ghost"
@@ -99,24 +126,30 @@ export function Contact() {
               </motion.div>
             ) : (
               <motion.form
+                ref={formRef}
                 key="form"
+                id={formId}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 onSubmit={onSubmit}
                 noValidate
-                className="rounded-3xl border border-line bg-card p-7 shadow-soft sm:p-8"
+                className="relative rounded-3xl border border-line bg-card p-7 shadow-soft sm:p-8"
+                aria-busy={submitting}
               >
                 <Field
-                  id="name"
+                  id={`${formId}-name`}
+                  name="name"
                   label="Name"
                   required
                   value={fields.name}
                   onChange={update("name")}
                   error={errors.name}
                   autoComplete="name"
+                  disabled={submitting}
                 />
                 <Field
-                  id="email"
+                  id={`${formId}-email`}
+                  name="email"
                   label="Email"
                   type="email"
                   required
@@ -124,19 +157,53 @@ export function Contact() {
                   onChange={update("email")}
                   error={errors.email}
                   autoComplete="email"
+                  disabled={submitting}
                 />
                 <Field
-                  id="message"
+                  id={`${formId}-message`}
+                  name="message"
                   label="Message"
                   required
                   multiline
                   value={fields.message}
                   onChange={update("message")}
                   error={errors.message}
+                  disabled={submitting}
                 />
-                <Button type="submit" size="lg" className="mt-6 w-full sm:w-auto">
-                  Send message
-                  <Send size={18} />
+
+                {formError && (
+                  <p
+                    role="alert"
+                    className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300"
+                  >
+                    {formError}{" "}
+                    <a
+                      className="font-medium underline"
+                      href={`mailto:${CONTACT_INBOX}`}
+                    >
+                      Email {CONTACT_INBOX}
+                    </a>
+                  </p>
+                )}
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="mt-2 w-full sm:w-auto"
+                  disabled={submitting}
+                  aria-disabled={submitting}
+                >
+                  {submitting ? (
+                    <>
+                      Sending…
+                      <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+                    </>
+                  ) : (
+                    <>
+                      Send message
+                      <Send size={18} aria-hidden="true" />
+                    </>
+                  )}
                 </Button>
               </motion.form>
             )}
@@ -149,6 +216,7 @@ export function Contact() {
 
 type FieldProps = {
   id: string;
+  name: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
@@ -157,10 +225,12 @@ type FieldProps = {
   multiline?: boolean;
   error?: string;
   autoComplete?: string;
+  disabled?: boolean;
 };
 
 function Field({
   id,
+  name,
   label,
   value,
   onChange,
@@ -169,10 +239,12 @@ function Field({
   multiline,
   error,
   autoComplete,
+  disabled,
 }: FieldProps) {
   const describedBy = error ? `${id}-error` : undefined;
   const controlClasses = cn(
-    "mt-1.5 w-full rounded-xl border bg-surface px-4 py-3 text-sm text-body transition-colors duration-200 placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-accent-500/60",
+    // text-base (≥16px) prevents iOS Safari from auto-zooming on focus.
+    "mt-1.5 w-full rounded-xl border bg-surface px-4 py-3 text-base text-body transition-colors duration-200 placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent-500/60 disabled:cursor-not-allowed disabled:opacity-60",
     error ? "border-red-400" : "border-line focus:border-accent-400"
   );
 
@@ -180,34 +252,44 @@ function Field({
     <div className="mb-5">
       <label htmlFor={id} className="text-sm font-medium text-heading">
         {label}
-        {required && <span className="ml-0.5 text-accent-600">*</span>}
+        {required && (
+          <span className="ml-0.5 text-accent-600" aria-hidden="true">
+            *
+          </span>
+        )}
       </label>
       {multiline ? (
         <textarea
           id={id}
+          name={name}
           rows={5}
           value={value}
           required={required}
+          disabled={disabled}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
+          aria-required={required}
           onChange={(e) => onChange(e.target.value)}
           className={cn(controlClasses, "resize-y")}
         />
       ) : (
         <input
           id={id}
+          name={name}
           type={type}
           value={value}
           required={required}
+          disabled={disabled}
           autoComplete={autoComplete}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
+          aria-required={required}
           onChange={(e) => onChange(e.target.value)}
           className={controlClasses}
         />
       )}
       {error && (
-        <p id={describedBy} className="mt-1.5 text-xs font-medium text-red-600">
+        <p id={describedBy} className="mt-1.5 text-xs font-medium text-red-600" role="alert">
           {error}
         </p>
       )}

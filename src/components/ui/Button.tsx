@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import type { HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "secondary" | "ghost" | "glass";
+type Variant = "primary" | "secondary" | "ghost" | "glass" | "light";
 type Size = "md" | "lg";
 
 type BaseProps = {
@@ -30,6 +30,9 @@ const variants: Record<Variant, string> = {
   // Frosted glass for use over imagery (hero).
   glass:
     "bg-white/10 text-white ring-1 ring-inset ring-white/40 backdrop-blur-md hover:bg-white/20",
+  // Solid white CTA for dark/hero surfaces (pairs with orange primary).
+  light:
+    "bg-white text-brand-950 shadow-soft hover:bg-brand-50 focus-visible:ring-offset-brand-950",
 };
 
 const sizes: Record<Size, string> = {

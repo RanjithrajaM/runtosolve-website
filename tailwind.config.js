@@ -3,19 +3,8 @@ export default {
   darkMode: "class",
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
-    container: {
-      center: true,
-      padding: {
-        DEFAULT: "1.25rem",
-        lg: "2rem",
-      },
-      screens: {
-        "2xl": "1200px",
-      },
-    },
     extend: {
       colors: {
-        // Brand palette — deep steel blue + molten amber accent (constant across themes).
         brand: {
           50: "#eef4fb",
           100: "#d5e3f4",
@@ -41,7 +30,6 @@ export default {
           800: "#9a3412",
           900: "#7c2d12",
         },
-        // Semantic tokens — resolved from CSS variables so they flip with the theme.
         surface: "rgb(var(--surface) / <alpha-value>)",
         "surface-2": "rgb(var(--surface-2) / <alpha-value>)",
         card: "rgb(var(--card) / <alpha-value>)",
@@ -71,23 +59,6 @@ export default {
       borderRadius: {
         "2xl": "1.25rem",
         "3xl": "1.75rem",
-      },
-      keyframes: {
-        "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(16px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        shimmer: {
-          "100%": { transform: "translateX(100%)" },
-        },
-        float: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-8px)" },
-        },
-      },
-      animation: {
-        "fade-up": "fade-up 0.6s ease-out both",
-        float: "float 6s ease-in-out infinite",
       },
     },
   },

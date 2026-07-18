@@ -5,12 +5,10 @@ import { cn } from "@/lib/cn";
 type CardProps = {
   className?: string;
   interactive?: boolean;
-  /** Stronger lift + scale for feature cards (e.g. offerings). */
   prominent?: boolean;
   children: ReactNode;
 };
 
-/** Elevated surface used for offerings, news, and other grouped content. */
 export function Card({
   className,
   interactive = true,
